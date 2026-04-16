@@ -116,6 +116,7 @@ def main() -> None:
         obs_client = connect_obs()
         print("Connected to OBS WebSocket.")
         print("Don't forget to disable auto-lock on the iPad (for chat) and turn on Focus Mode (DND)!")
+        print("Also, if this thing is flaky, try re-plugging the MIDI-to-USB cable")
     except Exception as e:
         print(f"Warning: Could not connect to OBS ({e}). Will retry on first trigger.")
 
