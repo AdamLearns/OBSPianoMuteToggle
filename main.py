@@ -54,7 +54,8 @@ def toggle_mute() -> None:
 def handle_midi(msg: mido.Message) -> None:
     now = time.monotonic()
 
-    if msg.type == "note_on" and msg.velocity > 0:
+    is_note_down = msg.type == "note_on" and msg.velocity > 0
+    if is_note_down:
         note_times[msg.note] = now
     elif msg.type == "note_off" or (msg.type == "note_on" and msg.velocity == 0):
         note_times.pop(msg.note, None)
@@ -65,8 +66,8 @@ def handle_midi(msg: mido.Message) -> None:
     for n in stale:
         del note_times[n]
 
-    # Trigger if all target notes are active within the window
-    if TARGET.issubset(note_times):
+    # Trigger only on note-down, when all target notes are active within the window
+    if is_note_down and TARGET.issubset(note_times):
         if now - last_trigger[0] >= COOLDOWN:
             last_trigger[0] = now
             toggle_mute()
